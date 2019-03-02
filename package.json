@@ -1,0 +1,34 @@
+{
+  "name": "compilador",
+  "version": "1.0.0",
+  "description": "compilador-js feito na matéria de compiladores do 7º termo de ciência da computação.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinicius-vasconcelos/compilador-js.git"
+  },
+  "keywords": [
+    "compilador",
+    "compiler",
+    "js",
+    "javascript",
+    "node",
+    "express"
+  ],
+  "author": "Vinicius Souza Vasconcelos dos Santos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vinicius-vasconcelos/compilador-js/issues"
+  },
+  "homepage": "https://github.com/vinicius-vasconcelos/compilador-js#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "consign": "^0.1.6",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1"
+  }
+}
