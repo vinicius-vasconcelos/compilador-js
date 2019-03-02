@@ -1,0 +1,61 @@
+/* BNF Chico's Language ED_II_edition */
+
+//explicando (palavras reservadas)
+        --tipos
+            chico       //int
+            chicao      //float
+            chicos      //char
+        
+        --operações
+            =
+            +
+            -
+            *
+            /
+            >
+            <
+        
+        --estruturas de controle
+            taestudando?    //if
+            vish            //else
+
+        --estruturas de repetição
+            atelerlivros        //for
+            enquantonaoestudar  //while
+
+        --extras
+            vazio       //void
+            principal   //main
+            saiu        //return
+//BNF
+
+    tipos especificos =   chico
+                        | chicao
+                        | chicos
+
+    operadores =  =
+                | +
+                | -
+                | *
+                | /
+                | >
+                | <
+                | &&
+                | ||
+    
+    taestudando? = "(" expressao ")" "{" //programa "}"
+                        | "(" expressao "&&" expressao ")" "{" //programa "}"
+                        | "(" expressao "||" expressao ")" "{" //programa "}"
+                        | "(" expressao ")" "{" //programa "}" [ "vish" "{" //programa "}"]
+                        | "(" expressao "&&" expressao ")" "{" //programa "}" [ "vish" "{" //programa "}"]
+                        | "(" expressao "||" expressao ")" "{" //programa "}" [ "vish" "{" //programa "}"]
+
+    enquantonaoestudar = "(" expressao")" "{" //programa "}"
+                            | "(" expressao "&&" expressao ")" "{" //programa "}"
+                            | "(" expressao "||" expressao ")" "{" //programa "}"
+    
+    atelerlivros = "(" expressao ";" expressao";" "expressao")" "{" //programa "}"
+                        | "(" expressao ";" expressao "&&" expressao ";" "expressao")" "{" //programa "}"
+                        | "(" expressao ";" expressao "||" expressao ";" "expressao")" "{" //programa "}"
+    
+    expressao = //valor "operadores" //valor
