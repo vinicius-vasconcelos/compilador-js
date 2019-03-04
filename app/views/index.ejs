@@ -9,22 +9,54 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
             integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
             crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+            integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" 
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="css/estilo.css">
     </head>
 
     <body>
         <header>
-            <h1>Chico's Language compiler</h1>
-            <p class="display-4">Você esta estudando ?</p>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-info">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#btnNav" aria-controls="btnNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="btnNav">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+                        <li class="nav-item border-right border-right-info">
+                            <a class="nav-link" href="#"> <span>Abrir</span> <i class="fas fa-folder-open fa-2x mx-2"></i></a>
+                        </li>
+                        <li class="nav-item border-right border-right-info">
+                            <a class="nav-link" href="#"> <span>Salvar</span> <i class="fas fa-save fa-2x mx-2"></i></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"> <span>Executar</span> <i class="fas fa-play-circle fa-2x mx-2"></i></a>
+                        </li>
+                    </ul>
+                    <button class="btn btn-lg btn-outline-danger my-2 my-sm-0" type="button">Chico's Language<i class="fas fa-skull-crossbones mx-2"></i></button>
+                
+                </div>
+            </nav>
         </header>
-        <hr>
+
         <main>
-            <p class="display-4">Bora lá...</p>
+            <article class="row p-0 m-0">
+                <!--Linhas-->
+                <section id="linha" class="col-md-1 d-flex flex-column bg-dark p-0 m-0">
+                    <input id="contador_linha_1" type="button" class="btn btn-sm btn-dark p-0 m-0" value="1">
+                </section>
+
+                <!--Área de editar o código-->
+                <section id="editor" class="col-md-11 p-0 m-0">
+                    <p id="linha_1" class="text-break p-0 m-0" contenteditable="true"></p>
+                </section>
+            </article>
         </main>
 
 
         <!--Arquivos JavaScript-->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
             integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
@@ -32,5 +64,6 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" 
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
+        <script src="js/editorJS.js"></script>
     </body>
 </html>

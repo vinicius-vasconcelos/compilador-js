@@ -1,0 +1,39 @@
+/* 
+    *** Documento inteiro e navbar superior9menu
+*/
+
+* {
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+body {
+    background-color: #1B9CFC;
+    overflow-x: hidden;
+}
+
+/*textos do navbar superior*/
+span {
+    font-size: 2em;
+}
+
+/*
+    *** section de contador de linhas
+*/
+
+
+/*
+    *** section de editor de códigos
+*/
+p { /* retirnado o pontilhado de seleção do P editor*/
+    outline: none;
+}
+
+#editor { /*Cor do funco e das letras da section editor*/
+    color: #ffffff;
+    background-color: #1B9CFC;
+}
+
+.p-color-back { /*colorindo o fundo do p selecionado para editar*/
+    background-color: #70a1ff;
+}
