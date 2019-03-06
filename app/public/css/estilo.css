@@ -12,28 +12,36 @@ body {
     overflow-x: hidden;
 }
 
-/*textos do navbar superior*/
-span {
-    font-size: 2em;
-}
-
 /*
-    *** section de contador de linhas
+    *** section de console
 */
+#console {
+    height: 20%;
+    overflow-y: scroll;
+}
 
 
 /*
     *** section de editor de códigos
 */
-p { /* retirnado o pontilhado de seleção do P editor*/
+p {
+    /* retirnado o pontilhado de seleção do P editor*/
     outline: none;
 }
 
-#editor { /*Cor do funco e das letras da section editor*/
+#editor {
+    /*Cor do funco e das letras da section editor*/
     color: #ffffff;
     background-color: #1B9CFC;
 }
 
-.p-color-back { /*colorindo o fundo do p selecionado para editar*/
+.p-color-back {
+    /*colorindo o fundo do p selecionado para editar*/
     background-color: #70a1ff;
+}
+
+form label,
+form button {
+    background-color: transparent;
+    height: 0px;
 }

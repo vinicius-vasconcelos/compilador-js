@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <title>Bem vindo ao Chico's Language</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" 
+            integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" 
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="css/estilo.css">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-info">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#btnNav" aria-controls="btnNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="btnNav">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+                        <li class="nav-item border-right border-right-info">
+                            <a id="compilar" class="nav-link" href="#"> <span>Executar</span> <i class="fas fa-play-circle mx-2"></i></a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <form id="aquivoExterno" method="post" enctype="multipart/form-data">
+                                <a class="nav-link">
+                                    <label for="arq_uploads">Abrir<i class="fas fa-folder-open mx-2"></i></label>
+                                    <input type="file" id="arq_uploads" name="arq_uploads" accept=".txt" multiple>
+                                </a>
+                            </form> 
+                        </li>
+                    </ul>
+                    <button class="btn btn-sm btn-outline-danger my-2 my-sm-0" type="button">CHICO#<i class="fas fa-skull-crossbones mx-2"></i></button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <article>
+                <!--seção de escrita do código-->
+                <section id="code" class="row p-0 m-0 position-relative">
+                    <!--Linhas-->
+                    <div id="numeracao" class="col-md-1 d-flex flex-column bg-dark p-0 m-0">
+                        <input id="contador_linha_1" type="button" class="btn btn-sm btn-dark p-0 m-0" value="1">
+                    </div>
+
+                    <!--Área de editar o código-->
+                    <div id="editor" class="col-md-11 p-0 m-0">
+                        <p id="linha" class="text-break p-0 m-0" contenteditable="true" autofocus="true"></p>
+                    </div>
+                </section>
+
+                <!--seção de saida de erros-->
+                <section id="console" class="row p-0 m-0 fixed-bottom border-top border-top-info bg-dark p-2">
+                    <div class="col-md-12 bg-white">
+                        Olá seja bem vindo ao Vincius Studio Code !!! <br> 
+                        Editor oficial do Chico# ...
+                    </div>
+                </section>
+            </article>
+        </main>
+
+
+        <!--Arquivos JavaScript-->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" 
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+        <script src="js/editorJS.js"></script>
+    </body>
+</html>

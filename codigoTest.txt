@@ -1,0 +1,8 @@
+chico man(){
+	chico valor = 0;
+	chico i = 10;
+	chicos = 'ola mundo';
+
+	enquantonaoestudar(i > 0) {
+		i--;
+	}
