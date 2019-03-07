@@ -24,6 +24,7 @@ app.use(morgan('dev'));
 //configurando o consign para o autoload das pastas
 consign()
     .include('app/controllers')
+    .then('app/classesApoio')
     .then('app/routes')
     .into(app);
 
