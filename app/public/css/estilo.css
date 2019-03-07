@@ -102,3 +102,24 @@ form button {
     background-color: transparent;
     height: 0px;
 }
+
+/* CSS Styles */
+#linha > div{
+    background: #FF0000;
+}
+#linha > div:focus{
+    background: #FFFF00;
+}
+#linha > div:focus-visible{
+    background: #FF00FF;
+}
+#linha > div::selection{
+    background: #00FF00;
+}
+#linha > div:active{
+    background: #F0FFFF;
+}
+
+#linha > div:enabled{
+    background: #FF0000;
+}
