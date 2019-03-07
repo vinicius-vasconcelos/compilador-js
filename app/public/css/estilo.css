@@ -53,8 +53,8 @@ body {
 
 #code::-webkit-scrollbar-track
 {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	background-color: #1B9CFC;
+	/* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+	background-color: rgba(0,0,0,0.2);
 }
 
 #code::-webkit-scrollbar
@@ -65,7 +65,7 @@ body {
 
 #code::-webkit-scrollbar-thumb
 {
-	background-color: #1B9CFC;
+	background-color: #555555;
 	border: 2px solid #555555;
 }
 
@@ -74,15 +74,27 @@ p {
     outline: none;
 }
 
+#contador_linha {
+    height: 24px;
+}
+
 #editor {
     /*Cor do funco e das letras da section editor*/
     color: #ffffff;
     background-color: #1B9CFC;
 }
 
+#linha { 
+    white-space: pre-wrap;
+}
+
+#linha > div {
+    height: 24px;
+}
+
 .p-color-back {
     /*colorindo o fundo do p selecionado para editar*/
-    background-color: #70a1ff;
+    background-color: rgba(0,0,0,0.05);
 }
 
 form label,
