@@ -9,21 +9,66 @@
 
 body {
     background-color: #1B9CFC;
-    overflow-x: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
 }
 
 /*
     *** section de console
 */
 #console {
-    height: 20%;
+    height: 22vh;
     overflow-y: scroll;
+}
+
+#console::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #343a40;
+}
+
+#console::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #343a40;
+}
+
+#console::-webkit-scrollbar-thumb
+{
+	background-color: #343a40;
+	border: 2px solid #555555;
 }
 
 
 /*
     *** section de editor de códigos
 */
+#code {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+#code::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #1B9CFC;
+}
+
+#code::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #1B9CFC;
+}
+
+#code::-webkit-scrollbar-thumb
+{
+	background-color: #1B9CFC;
+	border: 2px solid #555555;
+}
+
 p {
     /* retirnado o pontilhado de seleção do P editor*/
     outline: none;
