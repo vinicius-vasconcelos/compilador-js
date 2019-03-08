@@ -46,6 +46,7 @@ $('input[type=file]').bind('change', function() {
 
         const textFile = window.atob(e.target.result.replace('data:text/plain;base64,', '').trim());
         $('#linha').html(text2DivShow(textFile)).focus();
+        desenharLinhas();
     };
     reader.readAsDataURL(file);    
 });
@@ -79,11 +80,31 @@ $('#compilar').click(() => {
 });
 
 
+$("#linha").keypress(function(event){
+    // console.log("Press:", event);
+});
+
+$('#linha').keydown(function(e) {
+    var code = e.keyCode || e.which;
+    if (code == '9') {
+        const original = $(window.getSelection().getRangeAt(0).startContainer).text();
+        const pos = window.getSelection().getRangeAt(0).startOffset;
+        const novo = original.substr(0, pos)+"    "+original.substr(pos);
+        
+        $(window.getSelection().getRangeAt(0).startContainer).text(novo)
+        $(window.getSelection().getRangeAt(0).startContainer).setCursorPosition(pos+4);
+        // $(window.getSelection().getRangeAt(0).startContainer).text();
+        console.log(e.type, pos, original, "->", novo);
+        // $("#linha").trigger($.Event({type: 'keypress', which: 32, key: ' ', charCode: 32, keyCode: 32}));
+        // console.log("Posicao:", $(this).getCursorPosition());
+        return false;
+    } 
+ });
+
 // Funções para melhorar o Funcionamento
 function desenharLinhas() {
-    const maxLinha = $("#linha > div").length + 1;
+    const maxLinha = $("#linha > div").length + ($("#linha").html().indexOf("<div>") == 0 ? 0 : 1);
     const linhasDesenhadas = $('#numeracao > input').length;
-    console.log(linhasDesenhadas, maxLinha);
 
     //criando numeração pras linhas
     for(let i = linhasDesenhadas; i < maxLinha; i++) {
@@ -112,3 +133,26 @@ function text2DivShow(textOriginal) {
 
     return textReturn;
 }
+
+function divShow2Text() {
+
+}
+
+
+// Função de descobrir a posição do cursor
+(function ($, undefined) {
+    $.fn.setCursorPosition = function(pos) {
+        this.each(function(index, elem) {
+            if (elem.setSelectionRange) {
+                elem.setSelectionRange(pos, pos);
+            } else if (elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
+            }
+        });
+        return this;
+    };
+})(jQuery);
