@@ -1,0 +1,12 @@
+chicoman 
+chico valor = 2 ; 
+taestudando? ( valor == 2 ) { 
+valor ++ ; 
+} 
+enquantonaoestudar ( i < 3 ) { 
+i -- ; 
+} 
+atelerlivros ( i = 0 ; i < 3 ; i ++ ) {
+chicos = "ola3 mundo" ; 
+} 
+chicoend 

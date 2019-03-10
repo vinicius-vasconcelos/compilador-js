@@ -1,13 +1,12 @@
 module.exports = function (application) {
 
-    this.verificaToken = cadeia => {
+     this.verificaToken = cadeia =>{
 
         return new Promise((resolve, reject) => {
 
             //pesquisando entre caracteres especiais
             Object.keys(caracteres_especiais()).forEach(function(key){
-                console.log(`${cadeia} <================> ${caracteres_especiais()[key]}: ${cadeia == caracteres_especiais()[key]}`)
-                if(cadeia == caracteres_especiais()[key]) {
+                if(cadeia.toString() == caracteres_especiais()[key].toString()) {
                     resolve(key);
                 }
                     
@@ -53,6 +52,21 @@ module.exports = function (application) {
                     
             });
 
+            //verificando se é t_id
+            const regId = /^[A-Za-z]+$/;
+            if(regId.test(cadeia.toString()))
+                resolve('t_id');
+
+            
+            //verificando se é t_num
+            const regTnum = /^[0-9]+$/;
+            if(regTnum.test(cadeia.toString()))
+                resolve('t_num');
+
+            //verificando existencia de string
+            if(cadeia[0] == '"' &&cadeia[parseInt(cadeia.length)-1] == '"')
+                resolve('t_id');
+            
             //se não, não faz parte da linguagem
             reject(false);
 

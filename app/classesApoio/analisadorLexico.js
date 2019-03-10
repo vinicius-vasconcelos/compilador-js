@@ -1,6 +1,6 @@
 module.exports = function(application) {
 
-    this.analisadorLexico = (lexemas) => {
+    this.analisadorLexico = async (lexemas) => {
         /*console.log(lexemas);
         console.log('---------------------------------------------------------------------');*/
         let linhaAtual;
@@ -18,21 +18,33 @@ module.exports = function(application) {
             for(let c = 0; c < linhaAtual.length; c++){
                 //até achar um espaço em branco (outro comando)
                 if(linhaAtual[c] != ' ') {
-                    cadeia += `${linhaAtual[c]}`;
+
+                    //Aqui começa uma string ex: "ola3 mundo"
+                    if(linhaAtual[c] == '"') {
+                        cadeia = '"';
+                        let s
+                        for(s = c+1; linhaAtual[s] != '"'; s++)
+                            cadeia += `${linhaAtual[s]}`;
+                        cadeia += '"';
+                        console.log(`CADEIA: ${cadeia} <=> INÍCIO: ${cadeia[0]} <=> FIM: ${cadeia[parseInt(cadeia.length)-1]}`)
+                        c = s;
+                    }
+                    else {
+                        cadeia += `${linhaAtual[c]}`;
+                    }
                 }
                 else { //inserindo na tabela e verificando lexicamente;
 
+                    //console.log("cadeia here = " + cadeia);
+                   
                     //verificando se existe um token para a cadeia
-                    token = application.app.classesApoio.tokens.verificaToken(cadeia);
-                    //token = token.replace('Promise', ' ').replace('{', ' ').replace('}', ' ').replace('<rejected>', ' ').trim();
-
-                    console.log('------------------------------------------------------------------------');
-                    console.log(token);
-                    console.log('------------------------------------------------------------------------');
-                    if(!token) {
-                        token = '';
-                        status = token;
-                    }
+                    await application.app.classesApoio.tokens.verificaToken(cadeia).then(tk => {
+                       token = tk;
+                       status = true;
+                    }).catch( tkErr => {
+                        token = 't_invalido';
+                        status = false;
+                    });
 
                     //criando tabela de simbolos
                     tabelaSimbolos.push({
