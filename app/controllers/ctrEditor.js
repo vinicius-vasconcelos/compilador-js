@@ -8,16 +8,15 @@ module.exports = function (application) {
 
         let programa = req.body;
         let lexemas = programa.codigo.toString().split('<div>');
-    
 
-        //retirar todos os (&nbsp;) existentes
-
-        //modificar '&gt', '&lt' e '&amp'
+         //modificar '&gt', '&lt' e '&amp' e quebrando em linhas
+        for(let i = 0; i < lexemas.length; i++)
+            lexemas[i] = lexemas[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<');
 
         //construir tabela de cadeias e tokens(para a análise lexica)
+        application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas);
+        
 
-        //console.log(lexemas.length);
-        console.log(lexemas);
 
         //console.log(application.app.classesApoio.defGeral.operadores().t_add);
 

@@ -33,7 +33,7 @@
             man         //main
 
 --------------------------------------------------------------------------------------------------------------------------|
-//BNF
+//BNF (ARRUMAR)************************************************************************************************************************************************************************************************
 
     inicio = "chicoman" programa "chicoend" 
 
@@ -54,34 +54,39 @@
     chicos = "chicos" variaveis "="  letras ";"
 
     taestudando? = "(" expressao ")" "{" programa "}"
-                        | "(" expressao "&&" expressao ")" "{" programa "}"
-                        | "(" expressao "||" expressao ")" "{" programa "}"
-                        | "(" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
-                        | "(" expressao "&&" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
-                        | "(" expressao "||" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
+                    | "(" expressao "&&" expressao ")" "{" programa "}"
+                    | "(" expressao "||" expressao ")" "{" programa "}"
+                    | "(" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
+                    | "(" expressao "&&" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
+                    | "(" expressao "||" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
 
     enquantonaoestudar = "(" expressao")" "{" programa "}"
-                            | "(" expressao "&&" expressao ")" "{" programa "}"
-                            | "(" expressao "||" expressao ")" "{" programa "}"
+                        | "(" expressao "&&" expressao ")" "{" programa "}"
+                        | "(" expressao "||" expressao ")" "{" programa "}"
     
     atelerlivros = "(" expressao ";" expressao ";" "expressao")" "{" programa "}"
-                        | "(" expressao ";" expressao "&&" expressao ";" "expressao")" "{" programa "}"
-                        | "(" expressao ";" expressao "||" expressao ";" "expressao")" "{" programa "}"
+                    | "(" expressao ";" expressao "&&" expressao ";" "expressao")" "{" programa "}"
+                    | "(" expressao ";" expressao "||" expressao ";" "expressao")" "{" programa "}"
     
-    expressao = valor operadores valor ";"
+    expressao = valor operador_aritiméticos valor ";"
+                | valor  operador_Comparacao valor ";"
 
-    operadores =  "="
-                | "=="
-                | "+"
-                | "-"
-                | "*"
-                | "/"
-                | ">"
-                | "<"
-                | "&&"
-                | "||"
-                | "++"
-                | "--"
+    operador_atribuição =  "="
+
+    operador_aritiméticos = | "=="
+                            | "+"
+                            | "-"
+                            | "*"
+                            | "/"
+    
+    operador_Comparacao =    ">"
+                            | "<"
+
+    operador_lógico = | "&&"
+                      | "||"
+
+    operadaor_especial = "++"
+                        | "--"
 
     valor = letras
             | numeros

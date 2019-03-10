@@ -105,21 +105,25 @@ form button {
 
 /* CSS Styles */
 #linha > div{
-    background: #FF0000;
+    /*background: #FF0000;*/
+    background-color: rgba(0,0,0,0.05);
 }
 #linha > div:focus{
-    background: #FFFF00;
+    /*background: #FFFF00;*/
+    background: blue;
 }
 #linha > div:focus-visible{
     background: #FF00FF;
 }
 #linha > div::selection{
-    background: #00FF00;
+    /*background: #00FF00;*/
+    background: blue;
 }
 #linha > div:active{
     background: #F0FFFF;
 }
 
 #linha > div:enabled{
-    background: #FF0000;
+    /*background: #FF0000;*/
+    background-color: rgba(0,0,0,0.05);
 }

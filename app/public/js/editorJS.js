@@ -65,6 +65,7 @@ $('input[type=file]').bind('change', function() {
 //ajax de compilador
 $('#compilar').click(() => {
     let codigo = $('#linha').html();
+    //let codigo = $('#linha').text();
 
     $.ajax({
         url: '/compilar',
