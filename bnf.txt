@@ -33,7 +33,7 @@
             man         //main
 
 --------------------------------------------------------------------------------------------------------------------------|
-//BNF (ARRUMAR)************************************************************************************************************************************************************************************************
+//BNF
 
     inicio = "chicoman" programa "chicoend" 
 
@@ -47,110 +47,42 @@
                         | chicao
                         | chicos
     
-    chico = "chico" variaveis "=" numeros ";"
+    chico = "chico" variaveis "=" numeros ";" 
 
-    chicao = "chicao" variaveis "=" numeros ";"
+    chicao = "chicao" variaveis "=" numeros ";" 
 
-    chicos = "chicos" variaveis "="  letras ";"
+    chicos = "chicos" variaveis "="  letras ";" 
 
     taestudando? = "(" expressao ")" "{" programa "}"
-                    | "(" expressao "&&" expressao ")" "{" programa "}"
-                    | "(" expressao "||" expressao ")" "{" programa "}"
                     | "(" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
-                    | "(" expressao "&&" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
-                    | "(" expressao "||" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
 
     enquantonaoestudar = "(" expressao")" "{" programa "}"
-                        | "(" expressao "&&" expressao ")" "{" programa "}"
-                        | "(" expressao "||" expressao ")" "{" programa "}"
     
-    atelerlivros = "(" expressao ";" expressao ";" "expressao")" "{" programa "}"
-                    | "(" expressao ";" expressao "&&" expressao ";" "expressao")" "{" programa "}"
-                    | "(" expressao ";" expressao "||" expressao ";" "expressao")" "{" programa "}"
+    atelerlivros = "(" expressao ";" expressao ";" "expressao ")" "{" programa "}"
     
-    expressao = valor operador_aritiméticos valor ";"
-                | valor  operador_Comparacao valor ";"
+    expressao = numeros operador_atribuição numeros ";"
+                | numeros operador_atribuição numeros operador_aritiméticos numeros ";"
+                | numeros  operador_Comparacao numeros ";"
+                | numeros operadaor_especial ";"
+                | letras operador_atribuição letras ";"
+                | letras "+" letras ";";
 
     operador_atribuição =  "="
 
-    operador_aritiméticos = | "=="
-                            | "+"
+    operador_aritiméticos =  "+"
                             | "-"
                             | "*"
                             | "/"
     
-    operador_Comparacao =    ">"
+    operador_Comparacao =     "=="
+                            | ">"
                             | "<"
 
-    operador_lógico = | "&&"
-                      | "||"
 
     operadaor_especial = "++"
                         | "--"
 
-    valor = letras
-            | numeros
+    letras = a-z
+            | A--Z
 
-    letras = "A" 
-            | "a" 
-            | "B" 
-            | "b" 
-            | "C" 
-            | "c" 
-            | "D" 
-            | "d" 
-            | "E" 
-            | "e" 
-            | "F" 
-            | "f" 
-            | "G"
-            | "g" 
-            | "H" 
-            | "h" 
-            | "I" 
-            | "i" 
-            | "J" 
-            | "j" 
-            | "K" 
-            | "k" 
-            | "L" 
-            | "l" 
-            | "M" 
-            | "m" 
-            | "N" 
-            | "n" 
-            | "O" 
-            | "o" 
-            | "P" 
-            | "p" 
-            | "Q" 
-            | "q" 
-            | "R" 
-            | "r" 
-            | "S" 
-            | "s" 
-            | "T" 
-            | "t" 
-            | "U" 
-            | "u" 
-            | "V" 
-            | "v" 
-            | "W" 
-            | "w" 
-            | "X" 
-            | "x" 
-            | "Y" 
-            | "y" 
-            | "Z" 
-            | "z"
-
-    numeros = "0" 
-            | "1" 
-            | "2" 
-            | "3" 
-            | "4" 
-            | "5" 
-            | "6" 
-            | "7" 
-            | "8" 
-            | "9"
+    numeros = 0-9
