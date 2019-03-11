@@ -14,13 +14,24 @@ module.exports = function (application) {
             lexemas[i] = lexemas[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<');
 
         //construir tabela de cadeias e tokens(para a análise lexica)
-        application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas);
+        application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
+            //console.log(log);
+            let mensagemLog = '';
+
+            //tratando recebimento para dar resposta
+            for(let i = 0; i < log.length; i++)
+                if(!log[i].status)
+                    mensagemLog += `LINHA: ${log[i].linha} = "${log[i].cadeia}" cadeia inválida (ERRO LÉXICO) <br>`
+
+            if(mensagemLog == '')
+                mensagemLog = 'Compilado com SUCESSO !!!'
+
+            res.send(mensagemLog);
+        }).catch(errLog => {
+            console.log('Err = ' + errLog);
+            res.send('Ocorru um erro na compilação');
+        });
         
-
-
-        //console.log(application.app.classesApoio.defGeral.operadores().t_add);
-
-        res.send('chegou aqui caralho');
     }
 
     return this;

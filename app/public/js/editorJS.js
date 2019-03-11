@@ -72,10 +72,16 @@ $('#compilar').click(() => {
         method: 'post',
         data: {codigo: codigo},
         success: respText => {
-            console.log('Sucesso = ' + respText);
+            let logAtual = $('#console').html();
+            $('#console').text('');
+            $('#console').html('');
+            $('#console').append(`${logAtual}<hr> ${respText}`);
         },
         error: err => {
-            console.log('Erro = ' + JSON.stringify(err));
+            let logAtual = $('#console').html();
+            $('#console').text('');
+            $('#console').html('');
+            $('#console').append(`${logAtual}<hr> ${err}`);
         }
     });
 });
