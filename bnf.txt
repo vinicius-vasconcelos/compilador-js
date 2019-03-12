@@ -1,10 +1,9 @@
-/* BNF Chico's Language ED_II_edition */
+/* BNF Chico# Chico's Language ED_II_edition */
 
 //explicando (palavras reservadas)
         --tipos
             chico       //int
             chicao      //float
-            chicos      //char
         
         --operações
             ==
@@ -15,6 +14,9 @@
             /
             >
             <
+            >=
+            <=
+            !=
             &&
             ||
             ++
@@ -27,45 +29,56 @@
         --estruturas de repetição
             atelerlivros        //for
             enquantonaoestudar  //while
-
-        --extras
-            vazio       //void
-            man         //main
+        
+        --comentários
+            // isto é um comentário
 
 --------------------------------------------------------------------------------------------------------------------------|
 //BNF
 
-    inicio = "chicoman" programa "chicoend" 
+    inicio = "chicoman" {tipos_especificos}* programa "chicoend"
 
-    programa = tipos_especificos
-                | taestudando?
+    tipos_especificos =   chico
+                        | chicao
+
+    
+    chico = "chico" variavel operador_atribuição numeros ";" 
+
+    chicao = "chicao" variavel operador_atribuição numeros"."numeros ";" 
+
+    programa =  taestudando?
                 | enquantonaoestudar
                 | atelerlivros
                 | expressao
+                |[programa]
     
-    tipos_especificos =   chico
-                        | chicao
-                        | chicos
+
+    taestudando? = "(" comparacao ")" "{" programa "}"
+                    | "(" comparacao operador_logico comparacao ")" "{" programa "}"
+                    | "(" comparacao ")" "{" programa "}" [ "vish" "{" programa "}"]
+                    | "(" comparacao operador_logico comparacao ")" "{" programa "}" [ "vish" "{" programa "}"]
+
+    enquantonaoestudar = "(" comparacao ")" "{" programa "}"
+                        | "(" comparacao operador_logico comparacao")" "{" programa "}"
     
-    chico = "chico" variaveis "=" numeros ";" 
+    atelerlivros = "(" atribuicao ";" comparacao ";" incremento ")" "{" programa "}"
+                    | "(" atribuicao ";" comparacao operaador_logico comparacao ";" incremento ")" "{" programa "}"
 
-    chicao = "chicao" variaveis "=" numeros ";" 
-
-    chicos = "chicos" variaveis "="  letras ";" 
-
-    taestudando? = "(" expressao ")" "{" programa "}"
-                    | "(" expressao ")" "{" programa "}" [ "vish" "{" programa "}"]
-
-    enquantonaoestudar = "(" expressao")" "{" programa "}"
+    comparacao = numeros operador_Comparacao numeros
+                | variavel operador_Comparacao variavel
+                | numeros operador_Comparacao variavel
+                | variavel operador_Comparacao variavel
     
-    atelerlivros = "(" expressao ";" expressao ";" "expressao ")" "{" programa "}"
+    atribuicao = variavel operador_atribuição numeros ";"
+                | variavel operador_atribuição variavel ";"
     
-    expressao = numeros operador_atribuição numeros ";"
-                | numeros operador_atribuição numeros operador_aritiméticos numeros ";"
-                | numeros  operador_Comparacao numeros ";"
-                | numeros operadaor_especial ";"
-                | letras operador_atribuição letras ";"
-                | letras "+" letras ";";
+    incremento = numeros operador_especial
+                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
+    
+    expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
+                | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
+                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
+                | variavel operador_atribuição numeros operador_aritiméticos variavel ";"
 
     operador_atribuição =  "="
 
@@ -77,12 +90,17 @@
     operador_Comparacao =     "=="
                             | ">"
                             | "<"
+                            | "<="
+                            | ">="
+                            | "!="
+
+    operador_logico = "&&"
+                    | "||"
 
 
-    operadaor_especial = "++"
+    operador_especial = "++"
                         | "--"
 
-    letras = a-z
-            | A--Z
+    variavel = {"a...z"}+
 
-    numeros = 0-9
+    numeros = {"0...9"}+

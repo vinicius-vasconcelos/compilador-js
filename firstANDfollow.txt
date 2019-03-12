@@ -2,36 +2,80 @@
 //FIRST
     FIRST(inicio) = {chicoman}
 
-    FIRST(programa) = {chico, chicao, chicos, (, a-zA-Z, 0-9}
-
-    FIRST(tipos_especificos) = {chico, chicao, chicos}
+    FIRST(tipos_especificos) = {chico, chicao}
 
     FIRST(chico) = {chico}
 
     FIRST(chicao) = {chicao}
 
-    FIRST(chicos) = {chicos}
+    FIRST(programa) = {(, a...z, chicoend}
 
     FIRST(taestudando?) = {(}
 
     FIRST(enquantonaoestudar) = {(}
 
-    FIRST(atelerlivros) = {(,}
+    FIRST(atelerlivros) = {(}
 
-    FIRST(expressao) = {a-zA-Z, 0-9}
+    FIRST(comparacao) = {0...9, a...z}
+
+    FIRST(atribuicao) = {a...z}
+
+    FIRST(incremento) = {0...9, a...z}
+
+    FIRST(expressao) = {a...z}
 
     FIRST(operador_atribuição) = {=}
 
     FIRST(operador_aritiméticos) = {+, -, *, /}
 
-    FIRST(operador_Comparacao) = {==, >, <}
+    FIRST(operador_Comparacao) = {==, >, <, >=, <=, !=}
 
-    FIRST(operadaor_especial) = {++, --}
+    FIRST(operador_logico) = {&&, ||}
 
-    FIRST(letras) = {a-zA-Z}
+    FIRST(operadaor_especial) = {++ --}
 
-    FIRST(numeros){0-9}
+    FIRST(variavel) = {a...z}
+
+    FIRST(numeros){0...9}
 
 --------------------------------------------------------------------------------------------------------------------------|
 
 //FOLLOW
+
+    FOLLOW(inicio) = {$}
+
+    FOLLOW(tipos_especificos) = FIRST(programa)
+
+    FOLLOW(chico) = FIRST(programa) U FIRST(tipos_especificos)
+
+    FOLLOW(chicao) = FIRST(programa) U FIRST(tipos_especificos)
+
+    FOLLOW(programa) = {chicoend, }}
+
+    FOLLOW(taestudando?) = {chicoend,}}
+
+    FOLLOW(enquantonaoestudar) = {chicoend,}}
+
+    FOLLOW(atelerlivros) = {chicoend,}}
+
+    FOLLOW(comparacao) = {;, )}
+
+    FOLLOW(atribuicao) = {;}
+
+    FOLLOW(incremento) = {)}
+
+    FOLLOW(expressao) = {chicoend, }}
+
+    FOLLOW(operador_atribuição) = FIRST(numeros) U FIRST(variavel)
+
+    FOLLOW(operador_aritiméticos) = FIRST(numeros) U FIRST(variavel)
+
+    FOLLOW(operador_Comparacao) = FIRST(numeros) U FIRST(variavel)
+
+    FOLLOW(operador_logico) = FIRST(comparacao)
+
+    FOLLOW(operadaor_especial) = {)}
+
+    FOLLOW(variavel) = FIRST(operador_atribuição) U FIRST(operador_aritiméticos) U {;, )}
+
+    FOLLOW(numeros) = FIRST(operador_aritiméticos) U FIRST(operadaor_especial) U FIRST(operador_Comparacao) U {;, ., )}
