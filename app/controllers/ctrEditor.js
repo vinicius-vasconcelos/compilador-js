@@ -17,19 +17,23 @@ module.exports = function (application) {
         application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
             console.log(log);
             let mensagemLog = '';
+            let tabela = '';
 
             //tratando recebimento para dar resposta
-            for(let i = 0; i < log.length; i++)
+            for(let i = 0; i < log.length; i++) {
                 if(!log[i].status)
-                    mensagemLog += `LINHA: ${log[i].linha} = "${log[i].cadeia}" cadeia inválida (ERRO LÉXICO) <br>`
+                    mensagemLog += `LINHA ${log[i].linha} : "${log[i].cadeia}" cadeia inválida [ERRO LÉXICO] <br>`;
+                
+                tabela += `${log[i].cadeia}:${log[i].token},`;
+            }
 
             if(mensagemLog == '')
                 mensagemLog = 'Compilado com SUCESSO !!!'
 
-            res.send(mensagemLog);
+            res.send(`${mensagemLog}#${tabela}`);
         }).catch(errLog => {
-            console.log('Err = ' + errLog);
-            res.send(`Erro na compilação [ERROR: ${errLog}]`);
+            //console.log('Err = ' + errLog);
+            res.send(`${errLog}#`);
         });
         
     }

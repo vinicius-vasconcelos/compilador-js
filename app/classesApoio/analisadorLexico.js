@@ -9,6 +9,7 @@ module.exports = function(application) {
             let token;
             let status = true;
             let explodiu = false; // variável para controlar fim do comentário inexistente
+            let inicioComentario = 0;
             
             //percorrendo todo o código digitado
             for(let l = 0; l < lexemas.length; l++) {
@@ -22,6 +23,7 @@ module.exports = function(application) {
                     if(linhaAtual[c] == '/' && linhaAtual[c+1] == '*') { 
                         let i = c + 2;
                         let flag = true;
+                        inicioComentario = l;
 
                         do {
                             i++;
@@ -86,8 +88,12 @@ module.exports = function(application) {
                     }
                 }
             }
-            if(explodiu)
-                reject(`Faltou finalizar o programa com "chicoend" LINHA: ${lexemas.length}` );
+
+            //chamando meu análisador sintático
+            await application.app.classesApoio.analisadorSintatico.analisadorSintatico(tabelaSimbolos); 
+
+            if(explodiu) // se um comentário foi aberto e não foi fechado
+                reject(`LINHA ${lexemas.length-1}: comentário não finalizado falta de "chicoend" [COMENTÀRIO INICIADO NA LINHA: ${inicioComentario}]`);
             else
                 resolve(tabelaSimbolos);
         });

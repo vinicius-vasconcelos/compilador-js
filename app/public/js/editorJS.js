@@ -8,25 +8,6 @@ $(document).ready(() => {
     desenharLinhas();
 });
 
-/*//caputrando ENTER no p (CRIANDO NOVAS COISAS)
-$('#editor').on('keypress', 'p', function(key) {
-
-    if(key.which == 13) {
-        //caputrando linha de ação
-        let linhaAtual = parseInt(this.id.split('_')[1]);
-
-        //criando novo p dentro (SECTION EDITPO)
-        $('#editor').append(`<p 
-            id="linha" 
-            class="text-break p-0 m-0 p-color-back" 
-            contenteditable="true"></p>`);
-
-        //dando o foco para a nova linha
-        ajustarIdLinha(linhaAtual, 'insert');
-    }
-});*/
-
-
 $('#linha').on('input', function() {
     desenharLinhas();
 });
@@ -51,17 +32,6 @@ $('input[type=file]').bind('change', function() {
     reader.readAsDataURL(file);    
 });
 
-
-//pintar palavras reservadas
-// $('#linha').keyup(() => {
-//     let palavra = $('#linha').text()
-//     if(palavra == 'for') {
-//         $('#linha').html('&nbsp <span style="color: black">for</span> &nbsp');
-
-//         // #('#linha').trigger('kreypress', {which:35})
-//     }
-// });
-
 //ajax de compilador
 $('#compilar').click(() => {
     let codigo = $('#linha').html();
@@ -72,23 +42,80 @@ $('#compilar').click(() => {
         method: 'post',
         data: {codigo: codigo},
         success: respText => {
-            let logAtual = $('#console').html();
+
+            //tratando string de recebimento log e tabela de simbolos
+            let dados = respText.split('#');
+
+            //tabela de simbolos
+            let tabelado = dados[1].split(',');
+
+            $('#tabela').html('');
+            $('#tabela').text('');
+            $('#tabela').html(` 
+                <table id="tabelaSimbolos" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">CADEIA</th>
+                            <th scope="col">TOKEN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaSimbolos-corpo">
+                    </tbody>
+                </table>    
+            `);
+            for(let i = 0; i < tabelado.length-1; i++) {
+                $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
+                    <th scope="row">${tabelado[i].split(':')[0]}</th>
+                    <th scope="row">${tabelado[i].split(':')[1]}</th>
+                </tr>`);
+            }
+
+
+            //log
             $('#console').text('');
-            $('#console').html('');
-            $('#console').append(`${logAtual}<hr> ${respText}`);
+            $('#console').html(`Olá seja bem vindo ao Vincius Studio Code !!! <br> Editor oficial do Chico# ...<hr> ${dados[0]}`);
+
+            //pintando linha com erro no editor
+            let arrayForColor = dados[0].split('<br>')
+
+            for (let i = 0; i < arrayForColor.length; i++) { //retirando a classe
+                $(`#numeracao input#contador_linha`).removeClass('bg-danger');
+            }
+
+            for (let i = 0; i < arrayForColor.length; i++) {
+                $(`#numeracao input#contador_linha[value="${parseInt(arrayForColor[i].split(' ')[1])}"]`).addClass('bg-danger');
+            }
+            //console.log('compilado')
         },
         error: err => {
-            let logAtual = $('#console').html();
+            //tratando string de recebimento log e tabela de simbolos
+            let dados = err.split('#');
+
+            //tabela de simbolos
+            let tabelado = dados[1].split(',');
+
+            $('#tabela').html('');
+            $('#tabela').text('');
+            $('#tabela').html(`
+                <table id="tabelaSimbolos" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">CADEIA</th>
+                            <th scope="col">TOKEN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaSimbolos-corpo">
+                    </tbody>
+                </table>    
+            `);
+            for(let i = 0; i < tabelado.length; i++)
+                $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr><th scope="row">${tabelado[i]}</th></tr>`);
+            
+            //log
             $('#console').text('');
-            $('#console').html('');
-            $('#console').append(`${logAtual}<hr> ${err}`);
+            $('#console').html(`Olá seja bem vindo ao Vincius Studio Code !!! <br> Editor oficial do Chico# ...<hr> ${dados[0]}`);
         }
     });
-});
-
-
-$("#linha").keypress(function(event){
-    // console.log("Press:", event);
 });
 
 $('#linha').keydown(function(e) {
@@ -140,11 +167,6 @@ function text2DivShow(textOriginal) {
 
     return textReturn;
 }
-
-function divShow2Text() {
-
-}
-
 
 // Função de descobrir a posição do cursor
 (function ($, undefined) {

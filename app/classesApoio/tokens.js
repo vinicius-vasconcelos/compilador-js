@@ -1,6 +1,6 @@
 module.exports = function (application) {
 
-     this.verificaToken = cadeia =>{
+     this.verificaToken = cadeia => {
 
         return new Promise((resolve, reject) => {
 
