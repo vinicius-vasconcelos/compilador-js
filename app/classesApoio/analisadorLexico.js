@@ -8,6 +8,7 @@ module.exports = function(application) {
             let cadeia;
             let token;
             let status = true;
+            let explodiu = false; // variável para controlar fim do comentário inexistente
             
             //percorrendo todo o código digitado
             for(let l = 0; l < lexemas.length; l++) {
@@ -15,12 +16,40 @@ module.exports = function(application) {
                 linhaAtual = lexemas[l];
 
                 //repetição para achar os tokens
-                for(let c = 0; c < linhaAtual.length; c++){
-                    //até achar um espaço em branco (outro comando)
-                    if(linhaAtual[c] != ' ') {
+                for(let c = 0; !explodiu && c < linhaAtual.length; c++){
 
-                        //Aqui começa uma string ex: "ola3 mundo"
-                        if(linhaAtual[c] == '"') {
+                    //Achou um comentário
+                    if(linhaAtual[c] == '/' && linhaAtual[c+1] == '*') { 
+                        let i = c + 2;
+                        let flag = true;
+
+                        do {
+                            i++;
+
+                            if(linhaAtual[i] == '*')
+                                if(linhaAtual[i+1] == '/') {
+                                    flag = false;
+                                    i = i + 2;
+                                }
+
+                            if(flag && i == linhaAtual.length) {
+                                linhaAtual = lexemas[++l];
+                                i = c = 0;
+                                if(l == lexemas.length) { 
+                                    flag = false;
+                                    explodiu = true;
+                                    //i = linhaAtual.length;
+                                }
+                            }
+
+                        } while(flag);
+                        c = i;
+                    }
+
+                    //até achar um espaço em branco (outro comando)
+                    if(!explodiu && linhaAtual[c] != ' ') { 
+
+                        if(linhaAtual[c] == '"') { //Aqui começa uma string ex: "ola3 mundo"
                             cadeia = '"';
                             let s
                             for(s = c+1; linhaAtual[s] != '"'; s++)
@@ -28,34 +57,39 @@ module.exports = function(application) {
                             cadeia += '"';
                             c = s;
                         }
-                        else {
+                        else { //concatenando letras até formar o comando
                             cadeia += `${linhaAtual[c]}`;
                         }
                     }
                     else { //inserindo na tabela e verificando lexicamente;
-                    
-                        //verificando se existe um token para a cadeia
-                        await application.app.classesApoio.tokens.verificaToken(cadeia).then(tk => {
-                        token = tk;
-                        status = true;
-                        }).catch( tkErr => {
-                            token = 't_invalido';
-                            status = false;
-                        });
 
-                        //criando tabela de simbolos
-                        tabelaSimbolos.push({
-                            cadeia: cadeia,
-                            token: token,
-                            linha: l,
-                            status: status
-                        });
+                        if(cadeia != '') {
+                            //verificando se existe um token para a cadeia
+                            await application.app.classesApoio.tokens.verificaToken(cadeia).then(tk => {
+                                token = tk;
+                                status = true;
+                            }).catch( tkErr => {
+                                token = 't_invalido';
+                                status = false;
+                            });
 
-                        cadeia = '';
+                            //criando tabela de simbolos
+                            tabelaSimbolos.push({
+                                cadeia: cadeia,
+                                token: token,
+                                linha: l,
+                                status: status
+                            });
+
+                            cadeia = '';
+                        }
                     }
                 }
             }
-            resolve(tabelaSimbolos);
+            if(explodiu)
+                reject(`Faltou finalizar o programa com "chicoend" LINHA: ${lexemas.length}` );
+            else
+                resolve(tabelaSimbolos);
         });
     }
     return this;

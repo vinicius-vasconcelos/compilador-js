@@ -63,9 +63,22 @@ module.exports = function (application) {
             if(regTnum.test(cadeia.toString()))
                 resolve('t_num');
 
+
+            //verificando float (t_float)
+            const regTfloat = /^[0-9]+[.[0-9]+]?$/;
+            if(regTfloat.test(cadeia.toString()))
+                resolve('t_num');
+
+            //verificando número exponencial(t_expoente)
+            const regTexpoente = /^[0-9]+[.[0-9]+]?[eE[0-9]+]?$/;
+            if(regTexpoente.test(cadeia.toString()))
+                resolve('t_num');
+
+
             //verificando existencia de string
             if(cadeia[0] == '"' &&cadeia[parseInt(cadeia.length)-1] == '"')
-                resolve('t_id');
+                resolve('t_str');
+
             
             //se não, não faz parte da linguagem
             reject(false);
@@ -95,8 +108,12 @@ module.exports = function (application) {
             t_div: '/',
             t_maior: '>',
             t_menor: '<',
+            t_maiorI: '>=',
+            t_menorI: '<=',
             t_add2: '++',
-            t_sub2: '--'
+            t_sub2: '--',
+            t_and: '&&',
+            t_or: '||'
         }
     }
 
@@ -105,7 +122,8 @@ module.exports = function (application) {
         return {
             t_integer: 'chico',
             t_float: 'chicao',
-            t_string: 'chicos'
+            t_string: 'chicos',
+            t_expoente: 'chicox'
         }
     }
 

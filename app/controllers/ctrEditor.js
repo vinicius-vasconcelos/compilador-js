@@ -11,11 +11,11 @@ module.exports = function (application) {
 
          //modificar '&gt', '&lt' e '&amp' e quebrando em linhas
         for(let i = 0; i < lexemas.length; i++)
-            lexemas[i] = lexemas[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<');
+            lexemas[i] = lexemas[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<').replace('&amp;&amp;', '&&');
 
         //construir tabela de cadeias e tokens(para a análise lexica)
         application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
-            //console.log(log);
+            console.log(log);
             let mensagemLog = '';
 
             //tratando recebimento para dar resposta
@@ -29,7 +29,7 @@ module.exports = function (application) {
             res.send(mensagemLog);
         }).catch(errLog => {
             console.log('Err = ' + errLog);
-            res.send('Ocorru um erro na compilação');
+            res.send(`Erro na compilação [ERROR: ${errLog}]`);
         });
         
     }
