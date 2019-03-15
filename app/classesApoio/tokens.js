@@ -110,6 +110,7 @@ module.exports = function (application) {
             t_menor: '<',
             t_maiorI: '>=',
             t_menorI: '<=',
+            t_dif: '!=',
             t_add2: '++',
             t_sub2: '--',
             t_and: '&&',

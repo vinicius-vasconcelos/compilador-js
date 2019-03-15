@@ -21,8 +21,13 @@ module.exports = function (application) {
 
             //tratando recebimento para dar resposta
             for(let i = 0; i < log.length; i++) {
+                //erros léxicos
                 if(!log[i].status)
                     mensagemLog += `LINHA ${log[i].linha} : "${log[i].cadeia}" cadeia inválida [ERRO LÉXICO] <br>`;
+                
+                    //erros sintáticos
+                if(!log[i].statusSintatico)
+                mensagemLog += `LINHA ${log[i].linha} : ${log[i].erroSintatico} [ERRO SINTÁTICO] <br>`;
                 
                 tabela += `${log[i].cadeia}:${log[i].token},`;
             }

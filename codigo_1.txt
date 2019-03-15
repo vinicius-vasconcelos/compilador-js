@@ -1,6 +1,6 @@
 chicoman 
-chico valor = 2 ; 
+chico valor = 2  
 taestudando? ( valor == 2 ) { 
-valor ++ ; 
+valor ++  
 } 
 chicoend 
