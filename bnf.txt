@@ -40,11 +40,17 @@
 
     tipos_especificos =   chico
                         | chicao
+                        | chicos (ainda vou implementar)
+                        | chicox
 
     
-    chico = "chico" variavel operador_atribuição numeros ";" 
+    chico = "chico" variavel operador_atribuição numeros ";"
 
-    chicao = "chicao" variavel operador_atribuição numeros"."numeros ";" 
+    chicao = "chicao" variavel operador_atribuição numeros"."numeros ";"
+
+    chicos = "chicos" variavel operador_atribuição '"'{variavel}+ U {numeros}+'"' ";" (ainda vou implementar)
+
+    chicox = "chicox" variavel operador_atribuição numeros"."numeros"e"numeros ";"
 
     programa =  taestudando?
                 | enquantonaoestudar
@@ -54,15 +60,15 @@
     
 
     taestudando? = "(" comparacao ")" "{" programa "}"
-                    | "(" comparacao operador_logico comparacao ")" "{" programa "}"
+                    | "(" comparacao [{operador_logico comparacao}*] ")" "{" programa "}"
                     | "(" comparacao ")" "{" programa "}" [ "vish" "{" programa "}"]
-                    | "(" comparacao operador_logico comparacao ")" "{" programa "}" [ "vish" "{" programa "}"]
+                    | "(" comparacao [{operador_logico comparacao}*] ")" "{" programa "}" [ "vish" "{" programa "}"]
 
     enquantonaoestudar = "(" comparacao ")" "{" programa "}"
-                        | "(" comparacao operador_logico comparacao")" "{" programa "}"
+                        | "(" comparacao [{operador_logico comparacao}*] ")" "{" programa "}"
     
     atelerlivros = "(" atribuicao ";" comparacao ";" incremento ")" "{" programa "}"
-                    | "(" atribuicao ";" comparacao operaador_logico comparacao ";" incremento ")" "{" programa "}"
+                    | "(" atribuicao ";" comparacao [{operaador_logico comparacao}*] ";" incremento ")" "{" programa "}"
 
     comparacao = numeros operador_Comparacao numeros
                 | variavel operador_Comparacao variavel
@@ -104,3 +110,5 @@
     variavel = {"a...z"}+
 
     numeros = {"0...9"}+
+
+    obs. dps de cada instrução deve conter espaço em branco INCLUSIVE ao final das linhas

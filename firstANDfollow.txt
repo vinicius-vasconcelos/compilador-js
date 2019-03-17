@@ -2,11 +2,15 @@
 //FIRST
     FIRST(inicio) = {chicoman}
 
-    FIRST(tipos_especificos) = {chico, chicao}
+    FIRST(tipos_especificos) = {chico, chicao, chicos, chicox}
 
     FIRST(chico) = {chico}
 
     FIRST(chicao) = {chicao}
+
+    FIRST(chicos) = {chicos}
+
+    FIRST(chicox) = {chicox}
 
     FIRST(programa) = {(, a...z, chicoend}
 
@@ -49,6 +53,10 @@
     FOLLOW(chico) = FIRST(programa) U FIRST(tipos_especificos)
 
     FOLLOW(chicao) = FIRST(programa) U FIRST(tipos_especificos)
+
+    FOLLOW(chicos) = FIRST(programa) U FIRST(tipos_especificos)
+
+    FOLLOW(chicox) = FIRST(programa) U FIRST(tipos_especificos)
 
     FOLLOW(programa) = {chicoend, }}
 

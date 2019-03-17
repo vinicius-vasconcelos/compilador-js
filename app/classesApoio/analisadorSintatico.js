@@ -7,27 +7,28 @@
 */
 
 module.exports = function(application) {
-    pos = 0;
+    let pos;
+    let empilhaChaves = [];
+    let empilhaIf = [];
+    let acabou;
 
+    //(feito)
     this.analisadorSintatico = tabelaSimbolos => {
-        //console.log(tabelaSimbolos)
-        return new Promise((resolve, reject) => {
-            resolve(verificaInicio(tabelaSimbolos));
+        return new Promise(async (resolve, reject) => {
+            pos = 0;
+            acabou = false;
+            resolve(await verificaInicio(tabelaSimbolos));
+            reject(tabelaSimbolos);
         });
     }
 
-    //função verificadora do inicio de programa
+    //função verificadora do inicio de programa (Feito)
     function verificaInicio(tabelaSimbolos) {
-        if(TAM(tabelaSimbolos)) {    
-            if(tabelaSimbolos[pos].token == 't_inicio') {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
-            }
-            else {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Código deve-se iniciar com "chicoman "';
-            }
-        }
+        if(pos < tabelaSimbolos.length)
+            if(tabelaSimbolos[pos].token == 't_inicio')
+                gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            else 
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Código deve-se iniciar com "chicoman "');
 
         pos = pos + 1;
 
@@ -36,52 +37,58 @@ module.exports = function(application) {
             switch(tabelaSimbolos[pos].token) {
                 //tipos_especificos (insâncias de variáveis)
                 case 't_integer':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaInstanciaVar(tabelaSimbolos);
                 break;
 
                 case 't_float':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaInstanciaVar(tabelaSimbolos);
                 break;
 
                 case 't_string':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaInstanciaVar(tabelaSimbolos);
                 break;
 
                 case 't_expoente':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaInstanciaVar(tabelaSimbolos);
                 break;
 
                 //ou (taestudando?|enquantonaoestudar|atelerlivros|expressao)
                 case 't_if':
-                    verificaCorpo(tabelaSimbolos)
+                    verificaCorpo(tabelaSimbolos);
                 break;
 
                 case 't_for':
-                    verificaCorpo(tabelaSimbolos)
+                    verificaCorpo(tabelaSimbolos);
                 break;
 
                 case 't_while':
-                    verificaCorpo(tabelaSimbolos)
+                    verificaCorpo(tabelaSimbolos);
                 break;
 
                 case 't_id':
-                    verificaCorpo(tabelaSimbolos)
+                    verificaCorpo(tabelaSimbolos);
                 break;
 
-                default:
+                case 't_fim':
+                    acabou = true;
+                    verificaFim(tabelaSimbolos);
+                break;
+
+                default: //verficar {, (, ), } ***********
                     tabelaSimbolos[pos].statusSintatico = false;
                     tabelaSimbolos[pos].erroSintatico = `'Deixa eu ver qq acontece !' token =  ${tabelaSimbolos[pos].token} linha = ${tabelaSimbolos[pos].linha}`;
                 break;
             }
             pos = pos + 1;
+        }
+
+        if(!acabou) {
+            pos = pos - 1;
+            gravaMsgSintatico(false, tabelaSimbolos, pos, 'Espera-se "chicoend" como finalização de programa');
         }
 
         return tabelaSimbolos;
@@ -96,200 +103,243 @@ module.exports = function(application) {
 
                 //Estruturar de controle, repetição ou expressões
                 case 't_if':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    empilhaIf.push(tabelaSimbolos[pos]);
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaIf(tabelaSimbolos);
                 break;
 
                 case 't_for':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaFor(tabelaSimbolos);
                 break;
 
                 case 't_while':
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaWhile(tabelaSimbolos);
                 break;
 
                 case 't_id': //expressões(instruções)
-                    tabelaSimbolos[pos].statusSintatico = true;
-                    tabelaSimbolos[pos].erroSintatico = '';
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaExpressao(tabelaSimbolos);
+                break;
+
+                case 't_fim':
+                    acabou = true;
+                    verificaFim(tabelaSimbolos);
                 break;
 
                 //tipos_especificos (ERRO)
                 case 't_integer':
-                    tabelaSimbolos[pos].statusSintatico = false;
-                    tabelaSimbolos[pos].erroSintatico = 'Declaração de variáveis apenas no início ';
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
                 break;
 
                 case 't_float':
-                    tabelaSimbolos[pos].statusSintatico = false;
-                    tabelaSimbolos[pos].erroSintatico = 'Declaração de variáveis apenas no início ';
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
                 break;
 
                 case 't_string':
-                    tabelaSimbolos[pos].statusSintatico = false;
-                    tabelaSimbolos[pos].erroSintatico = 'Declaração de variáveis apenas no início ';
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
                 break;
 
                 case 't_expoente':
-                    tabelaSimbolos[pos].statusSintatico = false;
-                    tabelaSimbolos[pos].erroSintatico = 'Declaração de variáveis apenas no início ';
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
                 break;
 
-                default: //arrumar isso
+                default: //arrumar isso ******
                     tabelaSimbolos[pos].statusSintatico = false;
                     tabelaSimbolos[pos].erroSintatico = `'Deixa eu ver qq acontece !' token =  ${tabelaSimbolos[pos].token} linha = ${tabelaSimbolos[pos].linha}`;
                 break;
             }
             pos = pos + 1;
         }
-
-        return tabelaSimbolos;
     }
 
-    //função verificadora do instâncias de váriaveis (chico, chicao, chicos, chicox)
+    //função verificadora do instâncias de váriaveis (chico, chicao, chicos, chicox) (FEITO)
     function verificaInstanciaVar(tabelaSimbolos) {
-        //console.log(tabelaSimbolos[pos]);
-        //t_id
-        pos = pos + 1;
+        //captura linha da análise
+        if(pos < tabelaSimbolos.length) {
+            let codLinha = tabelaSimbolos[pos].linha;
+            let flag = true;
 
-        if(TAM(tabelaSimbolos)) {
-            //console.log(tabelaSimbolos[pos].token);
-            if( tabelaSimbolos[pos].token != 't_id') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "chico" espera-se um identificador';
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            //t_id
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if( tabelaSimbolos[pos].token != 't_id')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "chico" espera-se um identificador'); 
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            //console.log(tabelaSimbolos[pos]);
-        }
-        
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "chico" espera-se um identificador');
+                    flag = false;
+                }
+            } 
 
-        //t_atr '='
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {
-            //console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_atri') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Inicialize as variáveis espera-se "="';
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            //t_atr '='
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_atri') 
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador" espera-se "="');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            //console.log(tabelaSimbolos[pos]);
-        }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador" espera-se "="');
+                    flag = false;
+                }
+            } 
 
-        //t_num
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            //console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_num') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "identificador" espera-se um número ou string'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            //t_num
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_num')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de uma "atribuição" espera-se um número ou string');  
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            //console.log(tabelaSimbolos[pos]);
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de uma "atribuição" espera-se um número ou string');
+                    flag = false;
+                }
+            }
+
+            //t_ptv
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_ptv')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de um "número/string" espera-se um ";"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de um "número/string" espera-se um ";"');
+                    flag = false;
+                }
+            }
         }
     }
 
     //função verificadora do if (taestudando?)
     function verificaIf(tabelaSimbolos) {
-        //t_aparenteses '('
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_aparenteses') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "taestudando? " espera-se um "("'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
-            }
-            console.log(tabelaSimbolos[pos]);
-        }
+        //captura linha da análise
+        if(pos < tabelaSimbolos.length) {
+            let codLinha = tabelaSimbolos[pos].linha;
+            let flag = true;
 
-        //t_num | t_id
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "( " espera-se um "identificador" ou "número"'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+           //t_aparenteses '('
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_aparenteses')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "taestudando? " espera-se um "("');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            console.log(tabelaSimbolos[pos]);
-        }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "taestudando? " espera-se um "("');
+                    flag = false;
+                }
+            }
 
-        //t_comp | t_maior | t_menor | t_maiorI | t_menorI
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_comp' && 
+            //t_num | t_id
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') 
+                    gravaMsgSintatico(false, tabelaSimbolos, pos,'Depois de "( " espera-se um "identificador" ou "número"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "( " espera-se um "identificador" ou "número"');
+                    flag = false;
+                }
+            }
+
+            //t_comp | t_maior | t_menor | t_maiorI | t_menorI
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_comp' && 
                 tabelaSimbolos[pos].token != 't_maior' &&
                 tabelaSimbolos[pos].token != 't_menor' && 
                 tabelaSimbolos[pos].token != 't_maiorI' &&
                 tabelaSimbolos[pos].token != 't_menorI' &&
-                tabelaSimbolos[pos].token != 't_dif') {
-
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+                tabelaSimbolos[pos].token != 't_dif')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            console.log(tabelaSimbolos[pos]);
-        }
-
-        //t_num | t_id
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "op. de comparação" espera-se um "identificador" ou "número"'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
+                    flag = false;
+                }
             }
-            console.log(tabelaSimbolos[pos]);
-        }
 
-        //t_fparenteses ')'
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_fparenteses') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "identificador/número" espera-se um ")"'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            //t_num | t_id
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            console.log(tabelaSimbolos[pos]);
-        }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
+                    flag = false;
+                }
+            }
 
-        //t_achave '{'
-        pos = pos + 1;
-        if(TAM(tabelaSimbolos)) {    
-            console.log(tabelaSimbolos[pos].token);
-            if(tabelaSimbolos[pos].token != 't_achave') {
-                tabelaSimbolos[pos].statusSintatico = false;
-                tabelaSimbolos[pos].erroSintatico = 'Depois de "(" espera-se um "{"'; 
-            } else {
-                tabelaSimbolos[pos].statusSintatico = true;
-                tabelaSimbolos[pos].erroSintatico = '';
+            //t_fparenteses ')'
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_fparenteses')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um ")"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
-            console.log(tabelaSimbolos[pos]);
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um ")"');
+                    flag = false;
+                }
+            }
+
+            //t_achave '{'
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_achave') 
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "(" espera-se um "{"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "(" espera-se um "{"');
+                    flag = false;
+                } 
+            }
         }
+    }
+
+    //função verificadora do else (vish)
+    function verificaElse(tabelaSimbolos) {
+        console.log
     }
 
     //função verificadora do while (enquantonaoestudar)
@@ -307,14 +357,32 @@ module.exports = function(application) {
        
     }
 
-    //função verificadora do fim de programa
+    //função verificadora do fim de programa (FEITO)
+    function verificaFim(tabelaSimbolos) {
 
+        //verficando o fim de programa "chicoend"
+        gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+        
+        //fim de programa (daqui para baixo será desconsiderado)
+        pos = pos + 1;
+        if((tabelaSimbolos.length - pos) > 0)
+            gravaMsgSintatico(false, tabelaSimbolos, pos, `fim de programa na linha ${tabelaSimbolos[pos].linha}`);
 
-    //verificando se ainda existe código a ser válidado
-    function TAM(tabelaSimbolos) {
-        console.log('here pos = ' + pos + ' < ' + tabelaSimbolos.length);
-        return pos < tabelaSimbolos.length;
+        pos = tabelaSimbolos.length;   
     }
 
+    //função para gravação de mensagens sintáticos (FEITO)
+    function gravaMsgSintatico(status, tabelaSimbolos, pos, msg) {
+
+        //não ocorreu erros no token
+        if(status) {
+            tabelaSimbolos[pos].statusSintatico = status;
+            tabelaSimbolos[pos].erroSintatico = msg;
+        }
+        else { //deu bosta no token
+            tabelaSimbolos[pos].statusSintatico = status;
+            tabelaSimbolos[pos].erroSintatico = msg; 
+        }
+    }
     return this;
 }

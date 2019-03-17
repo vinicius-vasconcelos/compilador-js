@@ -91,9 +91,9 @@ module.exports = function(application) {
 
             //chamando meu análisador sintático
            await application.app.classesApoio.analisadorSintatico.analisadorSintatico(tabelaSimbolos).then(tabela => {
-            console.log('----------------------------------------------------------------------------------------------');    
+            /*console.log('----------------------------------------------------------------------------------------------');    
             console.log('VOLTOU DO ANÁLISADOR SINTÁTICO !!!');
-            console.log(tabela);
+            console.log(tabela);*/
             tabelaSimbolos = tabela;
            }).catch(err => {
                 console.log('ERRO NO ANÁLISADOR SINTÁTICO !!! ERROR: ' + err)

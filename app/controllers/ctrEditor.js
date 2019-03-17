@@ -18,16 +18,20 @@ module.exports = function (application) {
             //console.log(log);
             let mensagemLog = '';
             let tabela = '';
+            let linha = 0;
 
             //tratando recebimento para dar resposta
             for(let i = 0; i < log.length; i++) {
+
                 //erros léxicos
                 if(!log[i].status)
                     mensagemLog += `LINHA ${log[i].linha} : "${log[i].cadeia}" cadeia inválida [ERRO LÉXICO] <br>`;
                 
                     //erros sintáticos
-                if(!log[i].statusSintatico)
-                mensagemLog += `LINHA ${log[i].linha} : ${log[i].erroSintatico} [ERRO SINTÁTICO] <br>`;
+                if(!log[i].statusSintatico && linha != log[i].linha) {
+                    linha = log[i].linha;
+                    mensagemLog += `LINHA ${log[i].linha} : ${log[i].erroSintatico} [ERRO SINTÁTICO] <br>`;
+                }
                 
                 tabela += `${log[i].cadeia}:${log[i].token},`;
             }
