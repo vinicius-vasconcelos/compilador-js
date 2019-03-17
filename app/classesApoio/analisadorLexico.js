@@ -91,13 +91,11 @@ module.exports = function(application) {
 
             //chamando meu análisador sintático
            await application.app.classesApoio.analisadorSintatico.analisadorSintatico(tabelaSimbolos).then(tabela => {
-            /*console.log('----------------------------------------------------------------------------------------------');    
-            console.log('VOLTOU DO ANÁLISADOR SINTÁTICO !!!');
-            console.log(tabela);*/
-            tabelaSimbolos = tabela;
+                tabelaSimbolos = tabela;
            }).catch(err => {
                 console.log('ERRO NO ANÁLISADOR SINTÁTICO !!! ERROR: ' + err)
            });
+
 
             if(explodiu) // se um comentário foi aberto e não foi fechado
                 reject(`LINHA ${lexemas.length-1}: comentário não finalizado falta de "chicoend" [COMENTÀRIO INICIADO NA LINHA: ${inicioComentario}]`);

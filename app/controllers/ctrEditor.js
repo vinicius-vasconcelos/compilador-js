@@ -1,21 +1,32 @@
 module.exports = function (application) {
-    this.abrirArq = (req, res) => {
-        console.log(req.body);
-        res.send('chegou aqui caralho');
-    }
 
     this.compilar = (req, res) => {
-
+        
         let programa = req.body;
         let lexemas = programa.codigo.toString().split('<div>');
 
          //modificar '&gt', '&lt' e '&amp' e quebrando em linhas
         for(let i = 0; i < lexemas.length; i++)
-            lexemas[i] = lexemas[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<').replace('&amp;&amp;', '&&');
+            lexemas[i] = lexemas[i].replace('</div>', '')
+                                    .replace('&gt;', '>')
+                                    .replace('&lt;', '<')
+                                    .replace('&amp;&amp;', '&&')
+                                    .replace('<span style="font-size: 1rem;">', '')
+                                    .replace('</span><span style="font-size: 1rem;">', '')
+                                    .replace('</span>', '')
+                                    .replace('<span', '')
+                                    .replace('"font-size: 1rem;">', '');
+
+            //console.log(lexemas);
+        let teste = lexemas[0].toString().trim();
+        if(teste == '<br>' || teste == ' ') {
+            res.send('');
+            return;
+        }
 
         //construir tabela de cadeias e tokens(para a análise lexica)
         application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
-            //console.log(log);
+            //console.log(log)
             let mensagemLog = '';
             let tabela = '';
             let linha = 0;
@@ -41,7 +52,7 @@ module.exports = function (application) {
 
             res.send(`${mensagemLog}#${tabela}`);
         }).catch(errLog => {
-            //console.log('Err = ' + errLog);
+            console.log('Err = ' + errLog);
             res.send(`${errLog}#`);
         });
         
