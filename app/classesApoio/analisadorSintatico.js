@@ -10,6 +10,7 @@ module.exports = function(application) {
     let pos;
     let empilhaChaves;
     let empilhaIf;
+    let empilhaBora;
     let acabou;
     let flag;
 
@@ -19,6 +20,7 @@ module.exports = function(application) {
             acabou = false;
             empilhaChaves = new Array;
             empilhaIf = new Array;
+            empilhaBora = new Array;
             flag = false;
             resolve(await verificaInicio(tabelaSimbolos));
         });
@@ -77,7 +79,11 @@ module.exports = function(application) {
                     verificaCorpo(tabelaSimbolos);
                 break;
 
-                case 't_for':
+                case 't_do':
+                    verificaCorpo(tabelaSimbolos);
+                break;
+
+                case 't_while2':
                     verificaCorpo(tabelaSimbolos);
                 break;
 
@@ -111,6 +117,9 @@ module.exports = function(application) {
 
         if(empilhaChaves.length > 0)
             gravaMsgSintatico(false, tabelaSimbolos, empilhaChaves.pop(), 'chave aberta e não fechada');
+
+        if(empilhaBora.length > 0)
+            gravaMsgSintatico(false, tabelaSimbolos, empilhaBora.pop(), '"boraestudar?" espera um "estudando"');
         
         return tabelaSimbolos;
     }
@@ -144,16 +153,24 @@ module.exports = function(application) {
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');
                     verificaElse(tabelaSimbolos);
                 }
-                else {
+                else
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Todo "vish" prevê um "taestudando?"');
-                    //verificaElse(tabelaSimbolos);
-                }
-                    
                 break;
 
-                case 't_for':
+                case 't_do':
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-                    verificaFor(tabelaSimbolos);
+                    empilhaBora.push(pos);
+                break;
+
+                case 't_while2':
+                if(empilhaBora.length != 0) {
+                    empilhaBora.pop()
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+                    verificaEstudando(tabelaSimbolos);
+                }
+                else
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Todo "estudando" prevê um "boraestudar?"');
+                    
                 break;
 
                 case 't_while':
@@ -315,7 +332,7 @@ module.exports = function(application) {
 
             //t_achave '{'
             pos = pos + 1;
-            if(pos < tabelaSimbolos.length /*&& codLinha == tabelaSimbolos[pos].linha*/ ) {
+            if(pos < tabelaSimbolos.length) {
                 if(tabelaSimbolos[pos].token != 't_achave') 
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "(" espera-se um "{"');
                 else {
@@ -333,7 +350,7 @@ module.exports = function(application) {
         }
     }
 
-    //função verificadora do else (vish) (FEITO)
+   //função verificadora do else (vish) (FEITO)
     function verificaElse(tabelaSimbolos) {
         
         //if montado corretamente, agora verificar o else
@@ -491,11 +508,6 @@ module.exports = function(application) {
 
     }
 
-    /*//função verificadora do for (atelerlivros)
-    function verificaFor(tabelaSimbolos) {
-        
-    }*/
-
     //função verificadora de expressões
     function verificaExpressao(tabelaSimbolos) {
         //captura linha da análise
@@ -589,10 +601,11 @@ module.exports = function(application) {
                     flag = false;
                 }
             }
+
         }
     }
 
-    //função verificadora do fim de programa (FEITO)
+    //função verificadora do fim de programa
     function verificaFim(tabelaSimbolos) {
 
         //verficando o fim de programa "chicoend"
@@ -616,6 +629,65 @@ module.exports = function(application) {
         else { //deu bosta no token
             tabelaSimbolos[pos].statusSintatico = status;
             tabelaSimbolos[pos].erroSintatico = msg; 
+        }
+    }
+
+    //função de do while (boraestudar? estudando)
+    function verificaEstudando(tabelaSimbolos) {
+        //captura linha da análise
+        if(pos < tabelaSimbolos.length) {
+            let codLinha = tabelaSimbolos[pos].linha;
+            flag = true;
+
+           //t_aparenteses '('
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_aparenteses')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "estudando" espera-se um "("');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "estudando" espera-se um "("');
+                    flag = false;
+                }
+            }
+
+            verificaComparacoes(tabelaSimbolos, codLinha); //função para ver (t_id/t_num op.comp. t_id/t_num); 
+
+            //t_fparenteses ')'
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_fparenteses')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um ")"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um ")"');
+                    flag = false;
+                }
+            }
+
+            //t_ptv
+            pos = pos + 1;
+            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+                if(tabelaSimbolos[pos].token != 't_ptv')
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de um ")" espera-se um ";"');
+                else
+                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+            }
+            else {
+                pos = pos - 1;
+                if(flag) {
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de um ")" espera-se um ";"');
+                    flag = false;
+                }
+            }
         }
     }
 

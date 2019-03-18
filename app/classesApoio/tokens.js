@@ -111,10 +111,10 @@ module.exports = function (application) {
             t_maiorI: '>=',
             t_menorI: '<=',
             t_dif: '!=',
-            t_add2: '++',
-            t_sub2: '--',
-            t_and: '&&',
-            t_or: '||'
+            //t_add2: '++',
+            //t_sub2: '--',
+            //t_and: '&&',
+            //t_or: '||'
         }
     }
 
@@ -139,7 +139,8 @@ module.exports = function (application) {
     //função de estruturas de repetição da linguagem
     function est_repeticao(){
         return {
-            t_for: 'atelerlivros',
+            t_do: 'boraestudar?',
+            t_while2: 'estudando',
             t_while: 'enquantonaoestudar'
         }
     }
