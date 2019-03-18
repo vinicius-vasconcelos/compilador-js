@@ -2,8 +2,10 @@
 
 //explicando (palavras reservadas)
         --tipos
-            chico       //int
-            chicao      //float
+            chico       //int           (num)
+            chicao      //float         (num.num)
+            chicox      //exponencial   (num.numenum)
+            chicos      //string        ("text 2")
         
         --operações
             ==
@@ -19,19 +21,17 @@
             !=
             &&
             ||
-            ++
-            --
         
         --estruturas de controle
             taestudando?    //if
             vish            //else
 
         --estruturas de repetição
-            atelerlivros        //for
-            enquantonaoestudar  //while
+            boraestudar? estudando   //do while
+            enquantonaoestudar      //while
         
         --comentários
-            // isto é um comentário
+            /* isto é um comentário */
 
 --------------------------------------------------------------------------------------------------------------------------|
 //BNF
@@ -54,7 +54,7 @@
 
     programa =  taestudando?
                 | enquantonaoestudar
-                | atelerlivros
+                | boraestudar?
                 | expressao
                 |[programa]
     
@@ -67,19 +67,16 @@
     enquantonaoestudar = "(" comparacao ")" "{" programa "}"
                         | "(" comparacao [{operador_logico comparacao}*] ")" "{" programa "}"
     
-    atelerlivros = "(" atribuicao ";" comparacao ";" incremento ")" "{" programa "}"
-                    | "(" atribuicao ";" comparacao [{operaador_logico comparacao}*] ";" incremento ")" "{" programa "}"
+    boraestudar? = programa estudando
+
+    estudando = "estudando" "( comparacao ")" ";"
+                | "estudando" "( comparacao [{operador_logico comparacao}*] ")" ";"
 
     comparacao = numeros operador_Comparacao numeros
                 | variavel operador_Comparacao variavel
                 | numeros operador_Comparacao variavel
                 | variavel operador_Comparacao variavel
     
-    atribuicao = variavel operador_atribuição numeros ";"
-                | variavel operador_atribuição variavel ";"
-    
-    incremento = numeros operador_especial
-                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
     
     expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
                 | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
@@ -103,11 +100,7 @@
     operador_logico = "&&"
                     | "||"
 
-
-    operador_especial = "++"
-                        | "--"
-
-    variavel = {"a...z"}+
+    variavel = {"a...z...A...Z"}+
 
     numeros = {"0...9"}+
 

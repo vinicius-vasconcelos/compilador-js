@@ -12,21 +12,19 @@
 
     FIRST(chicox) = {chicox}
 
-    FIRST(programa) = {(, a...z, chicoend}
+    FIRST(programa) = {(, estudando, a...z...A...Z, }, chicoend}
 
     FIRST(taestudando?) = {(}
 
     FIRST(enquantonaoestudar) = {(}
 
-    FIRST(atelerlivros) = {(}
+    FIRST(boraestudar?) = {(, estudando, a...z...A...Z, }, chicoend}
 
-    FIRST(comparacao) = {0...9, a...z}
+    FIRST(estudando) = {estudando}
 
-    FIRST(atribuicao) = {a...z}
+    FIRST(comparacao) = {0...9, a...z...A...Z}
 
-    FIRST(incremento) = {0...9, a...z}
-
-    FIRST(expressao) = {a...z}
+    FIRST(expressao) = {a...z...A...Z}
 
     FIRST(operador_atribuição) = {=}
 
@@ -36,9 +34,7 @@
 
     FIRST(operador_logico) = {&&, ||}
 
-    FIRST(operadaor_especial) = {++ --}
-
-    FIRST(variavel) = {a...z}
+    FIRST(variavel) = {a...z...A...Z}
 
     FIRST(numeros){0...9}
 
@@ -58,31 +54,27 @@
 
     FOLLOW(chicox) = FIRST(programa) U FIRST(tipos_especificos)
 
-    FOLLOW(programa) = {chicoend, }}
+    FOLLOW(programa) = {chicoend, }} U FIRST(estudando)
 
-    FOLLOW(taestudando?) = {chicoend,}}
+    FOLLOW(taestudando?) = FOLLOW(programa) U FIRST(programa)
 
-    FOLLOW(enquantonaoestudar) = {chicoend,}}
+    FOLLOW(enquantonaoestudar) = FOLLOW(programa) U FIRST(programa)
 
-    FOLLOW(atelerlivros) = {chicoend,}}
+    FOLLOW(boraestudar?) = FOLLOW(programa) U FIRST(programa)
 
-    FOLLOW(comparacao) = {;, )}
+    FOLLOW(estudando) = FOLLOW(boraestudar?)
 
-    FOLLOW(atribuicao) = {;}
+    FOLLOW(comparacao) = {)} U FIRST(operador_logico)
 
-    FOLLOW(incremento) = {)}
+    FOLLOW(expressao) = FOLLOW(programa) U FIRST(programa)
 
-    FOLLOW(expressao) = {chicoend, }}
-
-    FOLLOW(operador_atribuição) = FIRST(numeros) U FIRST(variavel)
+    FOLLOW(operador_atribuição) = {"} U FIRST(numeros) U FIRST(variavel)
 
     FOLLOW(operador_aritiméticos) = FIRST(numeros) U FIRST(variavel)
 
     FOLLOW(operador_Comparacao) = FIRST(numeros) U FIRST(variavel)
 
     FOLLOW(operador_logico) = FIRST(comparacao)
-
-    FOLLOW(operadaor_especial) = {)}
 
     FOLLOW(variavel) = FIRST(operador_atribuição) U FIRST(operador_aritiméticos) U {;, )}
 
