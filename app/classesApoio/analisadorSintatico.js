@@ -8,26 +8,35 @@
 
 module.exports = function(application) { 
     let pos;
-    let empilhaChaves = [];
-    let empilhaIf = [];
+    let empilhaChaves;
+    let empilhaIf;
     let acabou;
+    let flag;
 
-    //(feito)
     this.analisadorSintatico = tabelaSimbolos => {
         return new Promise(async (resolve, reject) => {
             pos = 0;
             acabou = false;
+            empilhaChaves = new Array;
+            empilhaIf = new Array;
+            flag = false;
             resolve(await verificaInicio(tabelaSimbolos));
         });
     }
 
     //função verificadora do inicio de programa (Feito)
     function verificaInicio(tabelaSimbolos) {
+        let init = false;
+
         if(pos < tabelaSimbolos.length)
-            if(tabelaSimbolos[pos].token == 't_inicio')
+            if(tabelaSimbolos[pos].token == 't_inicio') {
+                init = true;
                 gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            else
-               gravaMsgSintatico(false, tabelaSimbolos, pos, 'Código deve-se iniciar com "chicoman "');
+            }
+            else {
+                init = false
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Código deve-se iniciar com "chicoman "');
+            }
 
         pos = pos + 1;
 
@@ -64,6 +73,10 @@ module.exports = function(application) {
                     verificaCorpo(tabelaSimbolos);
                 break;
 
+                case 't_fchave': //possivelmente terá um else ou "{" associado a ele
+                    verificaCorpo(tabelaSimbolos);
+                break;
+
                 case 't_for':
                     verificaCorpo(tabelaSimbolos);
                 break;
@@ -82,15 +95,18 @@ module.exports = function(application) {
                 break;
 
                 default: //verficar (, )
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, `token "${tabelaSimbolos[pos].token}" em posição incorreta`);
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, `token "${tabelaSimbolos[pos].cadeia}" em posição incorreta`);
                 break;
             }
             pos = pos + 1;
         }
 
-        if(!acabou) {
-            pos = pos - 2;
-            gravaMsgSintatico(false, tabelaSimbolos, pos, 'Espera-se "chicoend" como finalização de programa');
+        if(!acabou && init) {
+            if(tabelaSimbolos.length != 1)
+                pos = pos - 2;
+            else
+                pos = pos - 1;
+            gravaMsgSintatico(false, tabelaSimbolos, pos, 'Espera-se "chicoend" como finalização de programa e construção de "estruturas" corretas');
         }
 
         if(empilhaChaves.length > 0)
@@ -130,6 +146,7 @@ module.exports = function(application) {
                 }
                 else {
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Todo "vish" prevê um "taestudando?"');
+                    //verificaElse(tabelaSimbolos);
                 }
                     
                 break;
@@ -156,23 +173,23 @@ module.exports = function(application) {
 
                 //tipos_especificos (ERRO)
                 case 't_integer':
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início do programa');
                 break;
 
                 case 't_float':
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início do programa');
                 break;
 
                 case 't_string':
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início do programa');
                 break;
 
                 case 't_expoente':
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início ');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Declaração de variáveis apenas no início do programa');
                 break;
 
                 default: //arrumar isso ******
-                gravaMsgSintatico(false, tabelaSimbolos, pos, `token "${tabelaSimbolos[pos].token}" em posição incorreta`);
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, `token "${tabelaSimbolos[pos].cadeia}" em posição incorreta`);
                 break;
             }
             pos = pos + 1;
@@ -184,7 +201,7 @@ module.exports = function(application) {
         //captura linha da análise
         if(pos < tabelaSimbolos.length) {
             let codLinha = tabelaSimbolos[pos].linha;
-            let flag = true;
+            flag = true;
 
             //t_id
             pos = pos + 1;
@@ -259,7 +276,7 @@ module.exports = function(application) {
         //captura linha da análise
         if(pos < tabelaSimbolos.length) {
             let codLinha = tabelaSimbolos[pos].linha;
-            let flag = true;
+            flag = true;
 
            //t_aparenteses '('
             pos = pos + 1;
@@ -270,6 +287,7 @@ module.exports = function(application) {
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
             else {
+                
                 pos = pos - 1;
                 if(flag) {
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "taestudando? " espera-se um "("');
@@ -277,58 +295,7 @@ module.exports = function(application) {
                 }
             }
 
-            //t_num | t_id
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') 
-                    gravaMsgSintatico(false, tabelaSimbolos, pos,'Depois de "( " espera-se um "identificador" ou "número"');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "( " espera-se um "identificador" ou "número"');
-                    flag = false;
-                }
-            }
-
-            //t_comp | t_maior | t_menor | t_maiorI | t_menorI
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_comp' && 
-                tabelaSimbolos[pos].token != 't_maior' &&
-                tabelaSimbolos[pos].token != 't_menor' && 
-                tabelaSimbolos[pos].token != 't_maiorI' &&
-                tabelaSimbolos[pos].token != 't_menorI' &&
-                tabelaSimbolos[pos].token != 't_dif')
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
-                    flag = false;
-                }
-            }
-
-            //t_num | t_id
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id')
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
-                    flag = false;
-                }
-            }
+            verificaComparacoes(tabelaSimbolos, codLinha); //função para ver (t_id/t_num op.comp. t_id/t_num)
 
             //t_fparenteses ')'
             pos = pos + 1;
@@ -348,7 +315,7 @@ module.exports = function(application) {
 
             //t_achave '{'
             pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(pos < tabelaSimbolos.length /*&& codLinha == tabelaSimbolos[pos].linha*/ ) {
                 if(tabelaSimbolos[pos].token != 't_achave') 
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "(" espera-se um "{"');
                 else {
@@ -368,15 +335,13 @@ module.exports = function(application) {
 
     //função verificadora do else (vish) (FEITO)
     function verificaElse(tabelaSimbolos) {
+        
         //if montado corretamente, agora verificar o else
         if(tabelaSimbolos[pos-1].token == 't_fchave') {
-            
-            let codLinha = tabelaSimbolos[pos].linha;
-            let flag = true;
-            
+            flag = true;
             //t_achave '{'
             pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(pos < tabelaSimbolos.length ) {
                 
                 if(tabelaSimbolos[pos].token != 't_achave') 
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "vish" espera-se um "{"');
@@ -404,76 +369,25 @@ module.exports = function(application) {
         //captura linha da análise
         if(pos < tabelaSimbolos.length) {
             let codLinha = tabelaSimbolos[pos].linha;
-            let flag = true;
+            flag = true;
 
            //t_aparenteses '('
             pos = pos + 1;
             if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
                 if(tabelaSimbolos[pos].token != 't_aparenteses')
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "enquantonaoestudar " espera-se um "("');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "enquantonaoestudar" espera-se um "("');
                 else
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');
             }
             else {
                 pos = pos - 1;
                 if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "enquantonaoestudar " espera-se um "("');
+                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "enquantonaoestudar" espera-se um "("');
                     flag = false;
                 }
             }
 
-            //t_num | t_id
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') 
-                    gravaMsgSintatico(false, tabelaSimbolos, pos,'Depois de "( " espera-se um "identificador" ou "número"');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "( " espera-se um "identificador" ou "número"');
-                    flag = false;
-                }
-            }
-
-            //t_comp | t_maior | t_menor | t_maiorI | t_menorI
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_comp' && 
-                tabelaSimbolos[pos].token != 't_maior' &&
-                tabelaSimbolos[pos].token != 't_menor' && 
-                tabelaSimbolos[pos].token != 't_maiorI' &&
-                tabelaSimbolos[pos].token != 't_menorI' &&
-                tabelaSimbolos[pos].token != 't_dif')
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==,>,<,>=,<="');
-                    flag = false;
-                }
-            }
-
-            //t_num | t_id
-            pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id')
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
-                else
-                    gravaMsgSintatico(true, tabelaSimbolos, pos, '');
-            }
-            else {
-                pos = pos - 1;
-                if(flag) {
-                    gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador" ou "número"');
-                    flag = false;
-                }
-            }
+            verificaComparacoes(tabelaSimbolos, codLinha); //função para ver (t_id/t_num op.comp. t_id/t_num); 
 
             //t_fparenteses ')'
             pos = pos + 1;
@@ -493,7 +407,7 @@ module.exports = function(application) {
 
             //t_achave '{'
             pos = pos + 1;
-            if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(pos < tabelaSimbolos.length) {
                 if(tabelaSimbolos[pos].token != 't_achave') 
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de ")" espera-se um "{"');
                 else {
@@ -511,6 +425,72 @@ module.exports = function(application) {
         }        
     }
 
+    //função para comparações (==, <, >, <=, >=, !=)
+    function verificaComparacoes(tabelaSimbolos, codLinha) {
+        //t_num | t_id
+        pos = pos + 1;
+        if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') 
+                gravaMsgSintatico(false, tabelaSimbolos, pos,'Depois de "(" espera-se um "identificador" ou "número"');
+            else
+                gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+        }
+        else {
+            pos = pos - 1;
+            if(flag) {
+                gravaMsgSintatico(false, tabelaSimbolos, pos,`Depois de "${tabelaSimbolos[pos].cadeia}" espera-se um "identificador" ou "número"`);
+                flag = false;
+            }
+        }
+
+        //t_comp | t_maior | t_menor | t_maiorI | t_menorI
+        pos = pos + 1;
+        if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(tabelaSimbolos[pos].token != 't_comp' && 
+            tabelaSimbolos[pos].token != 't_maior' &&
+            tabelaSimbolos[pos].token != 't_menor' && 
+            tabelaSimbolos[pos].token != 't_maiorI' &&
+            tabelaSimbolos[pos].token != 't_menorI' &&
+            tabelaSimbolos[pos].token != 't_dif')
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==, >, <, >=, <=, !="');
+            else
+                gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+        }
+        else {
+            pos = pos - 1;
+            if(flag) {
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "identificador/número" espera-se um op. de comparação "==, >, <, >=, <=, !="');
+                flag = false;
+            }
+        }
+
+        //t_num | t_id
+        pos = pos + 1;
+        if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id')
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador/número"');
+            else
+                gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+        }
+        else {
+            pos = pos - 1;
+            if(flag) {
+                gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador/número"');
+                flag = false;
+            }
+        }
+
+        //verficando operador lógico
+        /*pos = pos + 1;
+        if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
+            if(tabelaSimbolos[pos].token == 't_and' || tabelaSimbolos[pos].token == 't_or') {
+                gravaMsgSintatico(true, tabelaSimbolos, pos, '');
+                verificaComparacoes(tabelaSimbolos);
+            }
+        }*/
+
+    }
+
     /*//função verificadora do for (atelerlivros)
     function verificaFor(tabelaSimbolos) {
         
@@ -521,7 +501,7 @@ module.exports = function(application) {
         //captura linha da análise
         if(pos < tabelaSimbolos.length) {
             let codLinha = tabelaSimbolos[pos].linha;
-            let flag = true;
+            flag = true;
 
             //t_atr '='
             pos = pos + 1;
