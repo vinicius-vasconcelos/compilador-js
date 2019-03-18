@@ -41,7 +41,6 @@ module.exports = function(application) {
             }
 
         pos = pos + 1;
-
         while(pos < tabelaSimbolos.length) {
             //chamar o próximo token
             switch(tabelaSimbolos[pos].token) {
@@ -213,7 +212,7 @@ module.exports = function(application) {
         }
     }
 
-    //função verificadora do instâncias de váriaveis (chico, chicao, chicos, chicox) (FEITO)
+    //função verificadora do instâncias de váriaveis (chico, chicao, chicos, chicox)
     function verificaInstanciaVar(tabelaSimbolos) {
         //captura linha da análise
         if(pos < tabelaSimbolos.length) {

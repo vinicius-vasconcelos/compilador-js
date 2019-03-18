@@ -16,8 +16,7 @@ module.exports = function (application) {
                                     .replace('</span>', '')
                                     .replace('<span', '')
                                     .replace('"font-size: 1rem;">', '');
-
-            //console.log(lexemas);
+                                    
         let teste = lexemas[0].toString().trim();
         if(teste == '<br>' || teste == ' ') {
             res.send('');
@@ -26,8 +25,6 @@ module.exports = function (application) {
 
         //construir tabela de cadeias e tokens(para a análise lexica)
         application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
-            console.log('############################## BORA EXIBIR ################################################');
-            //console.log(log)
             let mensagemLog = '';
             let tabela = '';
             let linha = 0;

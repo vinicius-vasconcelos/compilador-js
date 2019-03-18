@@ -1,0 +1,7 @@
+/* exemplo if */ 
+chicoman 
+chico val = 2 ; 
+taestudando? ( val == 2 ) { 
+val = val + 1 ; 
+} 
+chicoend 

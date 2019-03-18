@@ -1,0 +1,7 @@
+/* exemplo do while */ 
+chicoman 
+chicox val = 12.2e30 ; 
+boraestudar? 
+val = 128.55e5 ; 
+estudando ( 1 == 1 ) ; 
+chicoend 
