@@ -1,7 +1,7 @@
-/* exemplo if */ 
 chicoman 
-chico val = 2 ; 
-taestudando? ( val == 2 ) { 
-val = val + 1 ; 
+chico i = 2 ; 
+chicao valor = 2.2 ; 
+taestudando? ( i == 2 ) { 
+valor = 1.2 ;  
 } 
 chicoend 
