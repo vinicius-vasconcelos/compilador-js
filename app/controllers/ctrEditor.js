@@ -25,6 +25,8 @@ module.exports = function (application) {
 
         //construir tabela de cadeias e tokens(para a análise lexica)
         application.app.classesApoio.analisadorLexico.analisadorLexico(lexemas).then(log =>{
+
+            //console.log(log);
             let mensagemLog = '';
             let tabela = '';
             let linha = 0;
@@ -36,10 +38,16 @@ module.exports = function (application) {
                 if(!log[i].status)
                     mensagemLog += `LINHA ${log[i].linha} : "${log[i].cadeia}" cadeia inválida [ERRO LÉXICO] <br>`;
                 
-                    //erros sintáticos
+                //erros sintáticos
                 if(!log[i].statusSintatico && linha != log[i].linha) {
                     linha = log[i].linha;
                     mensagemLog += `LINHA ${log[i].linha} : ${log[i].erroSintatico} [ERRO SINTÁTICO] <br>`;
+                }
+
+                //erros semânticos
+                if(!log[i].statusSemantico && linha != log[i].linha) {
+                    linha = log[i].linha;
+                    mensagemLog += `LINHA ${log[i].linha} : ${log[i].erroSemantico} [ERRO SEMÂNTICO] <br>`;
                 }
                 
                 tabela += `${log[i].cadeia}:${log[i].token},`;

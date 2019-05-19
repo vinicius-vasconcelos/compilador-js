@@ -67,12 +67,12 @@ module.exports = function (application) {
             //verificando float (t_float)
             const regTfloat = /^[0-9]+[.[0-9]+]?$/;
             if(regTfloat.test(cadeia.toString()))
-                resolve('t_num');
+                resolve('t_flo');
 
             //verificando número exponencial(t_expoente)
             const regTexpoente = /^[0-9]+[.[0-9]+]?[eE[0-9]+]?$/;
             if(regTexpoente.test(cadeia.toString()))
-                resolve('t_num');
+                resolve('t_exp');
 
 
             //verificando existencia de string

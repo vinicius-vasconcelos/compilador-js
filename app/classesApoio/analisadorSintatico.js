@@ -255,6 +255,8 @@ module.exports = function(application) {
             pos = pos + 1;
             if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
                 if(tabelaSimbolos[pos].token != 't_num' && 
+                    tabelaSimbolos[pos].token != 't_exp' &&
+                    tabelaSimbolos[pos].token != 't_flo' &&
                     tabelaSimbolos[pos].token != 't_id' && 
                     tabelaSimbolos[pos].token != 't_str')
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de uma "atribuição" espera-se um número ou string');  
@@ -446,7 +448,10 @@ module.exports = function(application) {
         //t_num | t_id
         pos = pos + 1;
         if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id') 
+            if(tabelaSimbolos[pos].token != 't_num' && 
+                tabelaSimbolos[pos].token != 't_exp' &&
+                tabelaSimbolos[pos].token != 't_flo' &&
+                tabelaSimbolos[pos].token != 't_id') 
                 gravaMsgSintatico(false, tabelaSimbolos, pos,'Depois de "(" espera-se um "identificador" ou "número"');
             else
                 gravaMsgSintatico(true, tabelaSimbolos, pos, '');
@@ -483,7 +488,10 @@ module.exports = function(application) {
         //t_num | t_id
         pos = pos + 1;
         if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-            if(tabelaSimbolos[pos].token != 't_num' && tabelaSimbolos[pos].token != 't_id')
+            if(tabelaSimbolos[pos].token != 't_num' && 
+                tabelaSimbolos[pos].token != 't_exp' &&
+                tabelaSimbolos[pos].token != 't_flo' &&
+                tabelaSimbolos[pos].token != 't_id')
                 gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de "op. de comparação" espera-se um "identificador/número"');
             else
                 gravaMsgSintatico(true, tabelaSimbolos, pos, '');
@@ -533,7 +541,10 @@ module.exports = function(application) {
             //t_id ou t_num
             pos = pos + 1;
             if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if( tabelaSimbolos[pos].token != 't_id' && tabelaSimbolos[pos].token != 't_num')
+                if( tabelaSimbolos[pos].token != 't_id' && 
+                    tabelaSimbolos[pos].token != 't_exp' &&
+                    tabelaSimbolos[pos].token != 't_flo' &&
+                    tabelaSimbolos[pos].token != 't_num')
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de uma "=" espera-se um identificador ou numero'); 
                 else
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');
@@ -572,7 +583,10 @@ module.exports = function(application) {
             //t_id ou t_num
             pos = pos + 1;
             if(pos < tabelaSimbolos.length && codLinha == tabelaSimbolos[pos].linha) {
-                if( tabelaSimbolos[pos].token != 't_id' && tabelaSimbolos[pos].token != 't_num')
+                if( tabelaSimbolos[pos].token != 't_id' && 
+                    tabelaSimbolos[pos].token != 't_exp' &&
+                    tabelaSimbolos[pos].token != 't_flo' &&
+                    tabelaSimbolos[pos].token != 't_num')
                     gravaMsgSintatico(false, tabelaSimbolos, pos, 'Depois de uma "=" espera-se um identificador ou numero'); 
                 else
                     gravaMsgSintatico(true, tabelaSimbolos, pos, '');

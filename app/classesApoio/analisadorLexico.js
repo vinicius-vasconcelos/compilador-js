@@ -90,11 +90,16 @@ module.exports = function(application) {
             }
 
             //chamando meu análisador sintático
-           await application.app.classesApoio.analisadorSintatico.analisadorSintatico(tabelaSimbolos).then(tabela => {
-                tabelaSimbolos = tabela;
-           }).catch(err => {
-                console.log('ERRO NO ANÁLISADOR SINTÁTICO !!! ERROR: ' + err)
-           });
+           await application.app.classesApoio.analisadorSintatico.analisadorSintatico(tabelaSimbolos)
+                .then( async tabela => {
+                    //chamando meu análisador semântico
+                    await application.app.classesApoio.analisadorSemantico.analisadorSemantico(tabela)
+                        .then(tab => tabelaSimbolos = tab)
+                        .catch(err => console.log('ERRO NO ANÁLISADOR SEMÂNTICO !!! ERROR: ' + err))
+
+                    //tabelaSimbolos = tabela;
+                })
+                .catch(err => console.log('ERRO NO ANÁLISADOR SINTÁTICO !!! ERROR: ' + err));
 
 
             if(explodiu) // se um comentário foi aberto e não foi fechado
