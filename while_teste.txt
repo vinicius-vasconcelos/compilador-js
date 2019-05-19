@@ -1,8 +1,0 @@
-/* exemplo while */ 
-chicoman 
-chicao str = "ola mundo 3" ; 
-chico val = 2 ; 
-enquantonaoestudar ( 1 < valor ) { 
-valor = valor ; 
-} 
-chicoend 
